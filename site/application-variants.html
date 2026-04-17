@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CGP Application Variants v0.4</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<header class="site-header">
+  <a class="site-title" href="index.html">CGP Protocol</a>
+  <nav>
+    <a href="index.html">Overview</a>
+    <a href="core-protocol.html">Core Protocol</a>
+    <a href="application-variants.html" class="active">Variants</a>
+    <a href="governance.html">Governance</a>
+  </nav>
+</header>
+
+<div class="layout">
+
+  <aside class="sidebar" id="sidebar">
+    <button class="toc-toggle" id="toc-toggle">▼ Contents</button>
+    <h2>Contents</h2>
+    <ul>
+      <li><a href="#preface">Preface</a></li>
+      <li><a href="#s1">1. Phylum-Level Invariants</a></li>
+      <li><a href="#s2">2. Species-Level Variation</a></li>
+      <li><a href="#s3">3. SCGP — State</a></li>
+      <li><a href="#s4">4. CCGP — Corporate</a></li>
+      <li><a href="#s5">5. NCGP — Non-profit</a></li>
+      <li><a href="#s6">6. CoopCGP — Cooperative</a></li>
+      <li><a href="#s7">7. Cross-Variant Considerations</a></li>
+      <li><a href="#s8">8. Future Variants</a></li>
+    </ul>
+  </aside>
+
+  <main class="content">
+
+    <h1>CGP Application Variants</h1>
+    <p style="font-family:var(--ui);font-size:0.85rem;color:var(--text-muted);margin-top:-0.5rem;margin-bottom:1.5rem;">
+      Consensus Governance Protocol — Domain-Specific Instantiations &nbsp;·&nbsp;
+      <strong>v0.4</strong> &nbsp;·&nbsp; April 2026 &nbsp;·&nbsp;
+      Status: Variant catalogue. Each variant specification is draft-level.
+    </p>
+    <p style="font-family:var(--ui);font-size:0.85rem;color:var(--text-muted);margin-bottom:2rem;">
+      Raw Markdown:
+      <a href="https://github.com/SkepticusMaximus/CGP-Protocol/blob/main/docs/CGP_Application_Variants_v0_4.md"
+         target="_blank" rel="noopener"><code>docs/CGP_Application_Variants_v0_4.md</code></a>
+    </p>
+
+    <hr />
+
+    <h2 id="preface">Preface</h2>
+    <p>
+      This document catalogues the domains in which the CGP Core Protocol can be instantiated. The Core
+      Protocol specifies the <em>phylum</em> — the invariants common to every CGP deployment. This document
+      specifies the <em>species</em> — the adaptations required to fit the phylum to specific environments.
+    </p>
+    <p>
+      Four variants are currently identified: State CGP (SCGP), Corporate CGP (CCGP), Non-profit CGP
+      (NCGP), and Cooperative CGP (CoopCGP). The variant structure is deliberately open-ended. Readers
+      should assume the Core Protocol is stable and this document is live.
+    </p>
+
+    <hr />
+
+    <h2 id="s1">1. Phylum-Level Invariants</h2>
+    <p>
+      Every CGP variant, regardless of domain, must preserve the following properties. A deployment that
+      relaxes any of them is not CGP.
+    </p>
+    <ul>
+      <li><strong>Triadic token structure.</strong> Three token classes corresponding to the stakeholder, the liquidity/escrow layer, and the performer. No bilateral exchange permitted.</li>
+      <li><strong>PoD and PoR as distinct consensus events.</strong> Deliberation produces mandates (PoD); delivery produces ratification (PoR). The two fire at different moments, mint different tokens, and serve different functions.</li>
+      <li><strong>Equal-share dividends for deliberation participants.</strong> Wealth or size of bid does not confer greater democratic reward. Substantive engagement earns equal share; non-engagement earns nothing.</li>
+      <li><strong>Emergent reciprocal supply against an anchor.</strong> No engineered inflation or deflation schedule. Total value is bounded by the surplus generated above the anchor asset.</li>
+      <li><strong>Transparency as safety property.</strong> Every element must be human-readable without AI assistance. No black-box adjudication.</li>
+      <li><strong>Free-speech discussion substrate.</strong> Uncensored, distributed, resistant to platform capture. NNTP/Usenet is the default recommendation; what is mandatory is the property set.</li>
+    </ul>
+
+    <hr />
+
+    <h2 id="s2">2. Species-Level Variation</h2>
+    <p>The axes along which variants differ:</p>
+    <table>
+      <thead>
+        <tr><th>Axis</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Anchor asset</strong></td><td>What Agent Coin is denominated in. Tax pool / profit pool / donations / member dues.</td></tr>
+        <tr><td><strong>Stakeholder definition</strong></td><td>Who holds Citizen Coin equivalents.</td></tr>
+        <tr><td><strong>Performer definition</strong></td><td>Who holds Poli Coin equivalents.</td></tr>
+        <tr><td><strong>Performance metric</strong></td><td>What the PoR oracle verifies.</td></tr>
+        <tr><td><strong>Regulatory environment</strong></td><td>Legal and compliance framework the variant operates under.</td></tr>
+        <tr><td><strong>Time horizon</strong></td><td>Typical window from mandate to ratification.</td></tr>
+        <tr><td><strong>Agent role fit</strong></td><td>Appropriate form of the Agent node.</td></tr>
+      </tbody>
+    </table>
+
+    <hr />
+
+    <h2 id="s3">3. Variant Specifications</h2>
+
+    <div class="tab-bar">
+      <button class="tab-btn active" data-tab="tab-scgp">SCGP — State</button>
+      <button class="tab-btn" data-tab="tab-ccgp">CCGP — Corporate</button>
+      <button class="tab-btn" data-tab="tab-ncgp">NCGP — Non-profit</button>
+      <button class="tab-btn" data-tab="tab-coopcgp">CoopCGP — Cooperative</button>
+    </div>
+
+    <!-- ── SCGP ── -->
+    <div class="tab-panel active" id="tab-scgp">
+      <h3 id="s3">State CGP (SCGP)</h3>
+      <p>
+        The default reading of the CGP Core Protocol. Public-policy governance anchored to tax pools,
+        serving citizens, rewarding politicians for verified policy delivery.
+      </p>
+      <dl class="variant-axes">
+        <dt>Anchor asset</dt><dd>Tax pool of the jurisdiction, held as BTC/ETH reserve by Agent nodes.</dd>
+        <dt>Stakeholder</dt><dd>Enrolled citizens who have paid tax forward via an Agent node.</dd>
+        <dt>Performer</dt><dd>Elected politicians and, where specified in mandates, public servants and agencies tasked with delivery.</dd>
+        <dt>Performance metric</dt><dd>Policy delivery as specified in each mandate's smart contract. Metric specification is the design hard problem and varies enormously by mandate type.</dd>
+        <dt>Regulatory environment</dt><dd>Tax law governs the Agent-side fiat flow; electoral law governs the relationship to existing representative institutions. SCGP is designed to run in parallel with existing electoral systems, not to replace them.</dd>
+        <dt>Agent role fit</dt><dd>Human tax agents progressing to AI/DAO as the protocol matures.</dd>
+      </dl>
+
+      <h4>Subspecies</h4>
+
+      <h4 id="s3-1">3.1 Municipal SCGP</h4>
+      <p>
+        Shortest timescales, cleanest oracles. Local service delivery, procurement, infrastructure
+        maintenance, zoning. A pothole is filled or it is not. A permit is issued or it is not.
+      </p>
+      <p>
+        Municipal SCGP is the natural first-pilot venue for public-sector CGP. Oracle difficulty is low.
+        Mandate cycle time is days to months. Regulatory environment is local-authority-scale, avoiding
+        complex federal interactions. Participant cohorts are naturally bounded by geography and can be
+        small enough to bootstrap without network-effect concerns.
+      </p>
+      <p>
+        Partnership candidates: existing participatory budgeting communities (Porto Alegre model, Barcelona
+        model, and derivatives).
+      </p>
+
+      <h4 id="s3-2">3.2 State/County SCGP</h4>
+      <p>
+        Medium timescales, mixed oracle difficulty. State legislative cycles, regional infrastructure,
+        education and health policy at the state level, transport, land management. Oracles range from
+        clean (was the legislation passed?) to complex (did the health outcome improve?).
+      </p>
+      <p>
+        Mandate cycle times track legislative sessions, typically months to years. PoR verification may
+        require multi-stage milestones rather than binary delivery check.
+      </p>
+
+      <h4 id="s3-3">3.3 Federal SCGP</h4>
+      <p>
+        Longest timescales, hardest oracles. National legislation, defence and foreign policy,
+        macroeconomic management, federal taxation and spending. Many mandates involve outcomes that are
+        disputed for decades.
+      </p>
+      <p>
+        Federal SCGP is the last subspecies to pilot. Multi-source, multi-stage, and milestone-based PoR
+        is likely mandatory rather than optional. Federal deployment benefits from lower-subspecies
+        experience.
+      </p>
+    </div>
+
+    <!-- ── CCGP ── -->
+    <div class="tab-panel" id="tab-ccgp">
+      <h3 id="s4">Corporate CGP (CCGP)</h3>
+      <p>
+        Stakeholder governance inside private-sector organisations. Anchored to profit pool or
+        performance-bonus reserve, serving employees, shareholders, or a defined hybrid, rewarding
+        management for delivering on stakeholder mandates.
+      </p>
+      <dl class="variant-axes">
+        <dt>Anchor asset</dt><dd>Profit pool or dedicated performance-bonus reserve, held as BTC/ETH or the corporation's working capital in its functional currency.</dd>
+        <dt>Stakeholder</dt><dd>Employees, shareholders, or a specified hybrid. Hybrid designs are explicitly supported.</dd>
+        <dt>Performer</dt><dd>Executive management, department leaders, and, where mandates specify, individual staff with delivery authority.</dd>
+        <dt>Performance metric</dt><dd>Corporate KPIs that the firm's existing audit infrastructure already verifies. Revenue targets, delivery milestones, employee satisfaction, compliance outcomes, customer metrics.</dd>
+        <dt>Regulatory environment</dt><dd>Corporate governance framework (bylaws, articles of association), securities law where shareholders are stakeholders, employment law. Adoption does not require legislative change.</dd>
+        <dt>Time horizon</dt><dd>Weeks to months for most mandates. Fast cycle times enable rapid iteration of the protocol itself.</dd>
+        <dt>Agent role fit</dt><dd>Corporate finance and compliance functions.</dd>
+      </dl>
+
+      <h4>Why CCGP Is Likely First to Scale</h4>
+      <p>
+        Three properties combine to make CCGP the fastest-scaling variant:
+      </p>
+      <ul>
+        <li><strong>Oracle cleanliness.</strong> Corporate deliverables are instrumented for audit as a condition of existing operation.</li>
+        <li><strong>Regulatory brevity.</strong> The legal path from decision-to-adopt to running-deployment is weeks to months, versus years in SCGP.</li>
+        <li><strong>Revenue potential.</strong> CCGP deployment is a paid licensed service. The CGP governance body can fund protocol development through corporate licensing without depending on grants or public-sector adoption.</li>
+      </ul>
+
+      <h4>CCGP-Specific Considerations</h4>
+      <p>
+        Management captured as performer class rather than stakeholder class is the key design inversion
+        from SCGP. CCGP must prevent management from capturing the stakeholder layer by covertly
+        coordinating employee votes, manipulating PoD thresholds, or gaming KPI definitions.
+      </p>
+      <p>
+        Shareholder-stakeholder and employee-stakeholder hybrids raise weighting questions that SCGP does
+        not. A 50/50 hybrid, an equity-weighted shareholder portion with equal-share employee portion, or
+        separate mandate classes for each stakeholder type are all reasonable design choices. Whatever
+        answer is chosen must be specified in the corporate bylaws and operationally transparent.
+      </p>
+    </div>
+
+    <!-- ── NCGP ── -->
+    <div class="tab-panel" id="tab-ncgp">
+      <h3 id="s5">Non-profit CGP (NCGP)</h3>
+      <p>
+        Mission-aligned governance inside non-profit organisations. Anchored to donations, grants, or
+        combined funding, serving donors and beneficiaries, rewarding staff and program leaders for
+        delivering on mission mandates.
+      </p>
+      <dl class="variant-axes">
+        <dt>Anchor asset</dt><dd>Donations, grants, or combined funding pool, held as BTC/ETH reserve.</dd>
+        <dt>Stakeholder</dt><dd>Donors, beneficiaries, or both, depending on the non-profit's design choice.</dd>
+        <dt>Performer</dt><dd>Programme managers, staff, and external contractors whose delivery is verifiable against the mission metric.</dd>
+        <dt>Performance metric</dt><dd>Programme outputs as defined by the non-profit's mission. Meals delivered, students tutored, shelter-nights provided, research papers published, advocacy targets achieved.</dd>
+        <dt>Regulatory environment</dt><dd>Charitable-status regulations, donor transparency requirements, grant compliance obligations. Compatible with CGP's transparency-as-safety-property principle.</dd>
+        <dt>Time horizon</dt><dd>Varies widely. Small programme cycles may be weeks; strategic research may be years.</dd>
+        <dt>Agent role fit</dt><dd>Potentially fully autonomous AI/DAO from inception in small NCGP deployments.</dd>
+      </dl>
+
+      <h4>NCGP as AI/DAO Agent Field Test</h4>
+      <p>
+        Small non-profits are candidates for the first deployment of a fully autonomous AI/DAO Agent.
+        Three reasons combine:
+      </p>
+      <ul>
+        <li><strong>Economics.</strong> Small non-profits cannot afford human tax-agent-equivalent intermediaries.</li>
+        <li><strong>Verifiability.</strong> Mission metrics are often already machine-measurable — meals counted, shelter-nights logged, research papers DOI-verifiable.</li>
+        <li><strong>Stakes.</strong> Failure modes in small NCGP deployments are bounded. A miscounted meal has consequences, but they are operational rather than constitutional.</li>
+      </ul>
+
+      <h4>NCGP-Specific Considerations</h4>
+      <p>
+        Donor-governed versus beneficiary-governed models produce structurally different token dynamics.
+        Donor-governed NCGP resembles SCGP with the donor as citizen. Beneficiary-governed NCGP inverts
+        this: the recipient of the service holds the stake, while donors fund without directly controlling
+        mandates. Both are legitimate. Hybrid designs are possible but require explicit weighting in the
+        bylaws.
+      </p>
+    </div>
+
+    <!-- ── CoopCGP ── -->
+    <div class="tab-panel" id="tab-coopcgp">
+      <h3 id="s6">Cooperative CGP (CoopCGP)</h3>
+      <p>
+        Member governance inside cooperative organisations. Anchored to member dues, serving cooperative
+        members, rewarding elected officers for delivering on member mandates.
+      </p>
+      <dl class="variant-axes">
+        <dt>Anchor asset</dt><dd>Member dues pool, held as BTC/ETH reserve.</dd>
+        <dt>Stakeholder</dt><dd>Cooperative members, with the one-member-one-vote principle preserved from cooperative tradition regardless of financial contribution.</dd>
+        <dt>Performer</dt><dd>Elected officers, paid staff, and contracted service providers.</dd>
+        <dt>Performance metric</dt><dd>Cooperative outcomes as defined by the specific coop — member services delivered, prices maintained, community benefit provided, profits returned, sustainability metrics achieved.</dd>
+        <dt>Regulatory environment</dt><dd>Cooperative registry regulations in the relevant jurisdiction, which typically mandate one-member-one-vote and prescribe governance structures that CGP must conform to rather than override.</dd>
+        <dt>Time horizon</dt><dd>Seasonal to annual, aligned with cooperative reporting cycles.</dd>
+        <dt>Agent role fit</dt><dd>Cooperative administrators or external auditors.</dd>
+      </dl>
+
+      <h4>CoopCGP-Specific Considerations</h4>
+      <p>
+        Cooperative regulations in most jurisdictions mandate one-member-one-vote for significant decisions.
+        CGP's equal-share dividend mechanism is already aligned with this principle. Bid percentages apply
+        to individual members' coin holdings, which are themselves already equal at the vote level.
+      </p>
+      <p>
+        CoopCGP is in many respects the gentlest CGP variant to deploy, because cooperative culture already
+        aligns with CGP's anti-plutocracy principles. It is an under-recognised first-pilot candidate
+        alongside municipal SCGP.
+      </p>
+    </div>
+
+    <hr />
+
+    <h2 id="s7">7. Cross-Variant Considerations</h2>
+
+    <h3>Can a Corporation Participate in SCGP?</h3>
+    <p>
+      Yes, in at least two distinct roles. First, as a PAYG intermediary — the corporation as employer
+      holds tax aside for its employees and may take the SCGP Agent role itself, earning the agent's
+      commission on facilitation. Second, as a stakeholder via its owners or employees acting as citizens
+      in the external SCGP system.
+    </p>
+    <p>
+      A corporation cannot hold Citizen Coin directly in SCGP. Citizen Coin is bound to individual tax
+      liability, and corporations do not have civic stake in the democratic sense. Attempted corporate
+      holding of Citizen Coin is a capture vector that SCGP must guard against explicitly at the protocol
+      level.
+    </p>
+
+    <h3>Regulatory Interaction</h3>
+    <p>
+      Variants interact with different regulatory frameworks that may constrain design choices. The
+      phylum-level invariants are designed to be preserved across regulatory regimes, but specific
+      adaptations may be required. CCGP may trigger securities-regulation concerns in some jurisdictions
+      where token rewards to employees are involved. NCGP's transparency property is typically aligned
+      with charitable-status regulations rather than in tension with them.
+    </p>
+
+    <h3>Inter-variant Token Compatibility</h3>
+    <p>
+      Default assumption: variants are cryptographically isolated. Citizen Coin from one jurisdiction's
+      SCGP is not the same asset as Citizen Coin from another jurisdiction's SCGP, and is definitely not
+      the same as employee-stakeholder tokens from a CCGP deployment. Bridging mechanisms may be valuable
+      at the reserve level — BTC/ETH reserves are already fungible across variants and jurisdictions —
+      but token-level bridging introduces complexity and attack surface that should be justified by
+      specific use cases rather than permitted by default.
+    </p>
+
+    <hr />
+
+    <h2 id="s8">8. Future Variants</h2>
+    <p>
+      The four variants named here are not exhaustive. Candidates for future exploration include:
+    </p>
+    <ul>
+      <li><strong>Academic CGP</strong> — university governance with researchers as stakeholders, institution funding as anchor, tenure and research delivery as performance metrics.</li>
+      <li><strong>Open-source project CGP</strong> — contributor governance for major open-source projects, with commit rights and project direction as deliberative stakes.</li>
+      <li><strong>Professional-association CGP</strong> — governance of professional standards bodies, with member dues as anchor and professional-standards outcomes as metrics.</li>
+      <li><strong>Regional-consortium CGP</strong> — supra-national governance for problems that exceed single-jurisdiction scope (climate, cross-border infrastructure, migration).</li>
+    </ul>
+
+    <hr />
+    <p style="font-family:var(--ui);font-size:0.82rem;color:var(--text-muted);">
+      This document will evolve as variant deployments generate empirical evidence. Collaborators with
+      specific domain expertise — corporate governance, non-profit management, cooperative organising,
+      academic administration — are particularly welcome to propose refinements or entirely new variants.
+    </p>
+
+  </main>
+</div>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="attribution">
+      <strong>Author:</strong> Stevo (SkepticusMaximus), Adelaide, South Australia<br />
+      <strong>AI Collaborators:</strong> Claude (Anthropic) &amp; Manus AI<br />
+      Document Suite v0.4 · April 2026
+    </div>
+    <div class="badge">
+      <a href="https://github.com/SkepticusMaximus/CGP-Protocol/blob/main/LICENSE" target="_blank" rel="noopener">
+        <img src="https://img.shields.io/badge/License-GPL%20v3-blue.svg" alt="License: GPL v3" />
+      </a>
+    </div>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+</body>
+</html>

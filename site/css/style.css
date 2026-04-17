@@ -1,0 +1,328 @@
+/* CGP Protocol Site — Shared Stylesheet
+   Aesthetic: formal technical documentation (IETF / Ethereum Yellow Paper style)
+   No gradients, no animations, no marketing polish. */
+
+/* ── Reset & Base ─────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:          #ffffff;
+  --text:        #1a1a1a;
+  --text-muted:  #555555;
+  --border:      #d0d0d0;
+  --accent:      #1a3a5c;   /* deep navy — link / heading accent */
+  --accent-light:#e8eef5;   /* tinted background for code blocks */
+  --mono:        "Courier New", Courier, monospace;
+  --sans:        Georgia, "Times New Roman", serif;  /* body: serif for long-form readability */
+  --ui:          -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  --max-prose:   72ch;
+  --sidebar-w:   240px;
+}
+
+html { font-size: 16px; scroll-behavior: smooth; }
+
+body {
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+}
+
+/* ── Typography ───────────────────────────────────────────── */
+h1, h2, h3, h4, h5 {
+  font-family: var(--ui);
+  font-weight: 600;
+  color: var(--accent);
+  line-height: 1.3;
+  margin-top: 2rem;
+  margin-bottom: 0.6rem;
+}
+h1 { font-size: 1.9rem; border-bottom: 2px solid var(--accent); padding-bottom: 0.4rem; }
+h2 { font-size: 1.45rem; border-bottom: 1px solid var(--border); padding-bottom: 0.3rem; }
+h3 { font-size: 1.15rem; }
+h4 { font-size: 1rem; font-style: italic; }
+
+p { margin-bottom: 1rem; }
+
+a { color: var(--accent); text-decoration: underline; }
+a:hover { color: #0d2a45; }
+
+ul, ol { margin: 0.5rem 0 1rem 1.5rem; }
+li { margin-bottom: 0.3rem; }
+
+strong { font-weight: 700; }
+em { font-style: italic; }
+
+hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 2rem 0;
+}
+
+/* ── Code & Monospace ─────────────────────────────────────── */
+code, kbd, samp {
+  font-family: var(--mono);
+  font-size: 0.88em;
+  background: var(--accent-light);
+  padding: 0.1em 0.35em;
+  border-radius: 2px;
+}
+
+pre {
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  background: var(--accent-light);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  padding: 1rem 1.2rem;
+  overflow-x: auto;
+  line-height: 1.5;
+  margin: 1rem 0 1.5rem;
+  white-space: pre;
+}
+
+pre code { background: none; padding: 0; font-size: inherit; }
+
+/* ── Tables ───────────────────────────────────────────────── */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--ui);
+  font-size: 0.9rem;
+  margin: 1rem 0 1.5rem;
+}
+th {
+  background: var(--accent);
+  color: #fff;
+  text-align: left;
+  padding: 0.5rem 0.75rem;
+  font-weight: 600;
+}
+td {
+  padding: 0.45rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+tr:nth-child(even) td { background: #f7f9fb; }
+
+/* ── Site Header ──────────────────────────────────────────── */
+.site-header {
+  background: var(--accent);
+  color: #fff;
+  padding: 0.75rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--ui);
+  font-size: 0.9rem;
+}
+.site-header .site-title {
+  font-weight: 700;
+  font-size: 1rem;
+  color: #fff;
+  text-decoration: none;
+  letter-spacing: 0.02em;
+}
+.site-header nav a {
+  color: #ccd9e8;
+  text-decoration: none;
+  margin-left: 1.5rem;
+}
+.site-header nav a:hover { color: #fff; text-decoration: underline; }
+.site-header nav a.active { color: #fff; font-weight: 600; }
+
+/* ── Site Footer ──────────────────────────────────────────── */
+.site-footer {
+  border-top: 1px solid var(--border);
+  padding: 1.5rem 2rem;
+  font-family: var(--ui);
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin-top: 3rem;
+}
+.site-footer .footer-inner {
+  max-width: 960px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+.site-footer .attribution { line-height: 1.6; }
+.site-footer .badge img { vertical-align: middle; }
+
+/* ── Layout: Sidebar + Content ────────────────────────────── */
+.layout {
+  display: flex;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  gap: 2rem;
+}
+
+.sidebar {
+  width: var(--sidebar-w);
+  flex-shrink: 0;
+  padding-top: 2rem;
+  position: sticky;
+  top: 1rem;
+  align-self: flex-start;
+  max-height: calc(100vh - 4rem);
+  overflow-y: auto;
+  font-family: var(--ui);
+  font-size: 0.85rem;
+}
+.sidebar h2 {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  border: none;
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+}
+.sidebar ul { list-style: none; margin: 0; padding: 0; }
+.sidebar ul li { margin-bottom: 0.1rem; }
+.sidebar ul li a {
+  display: block;
+  padding: 0.2rem 0.4rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  border-left: 2px solid transparent;
+  transition: none;
+}
+.sidebar ul li a:hover,
+.sidebar ul li a.active {
+  color: var(--accent);
+  border-left-color: var(--accent);
+  background: var(--accent-light);
+}
+.sidebar ul ul { margin-left: 0.75rem; }
+.sidebar ul ul li a { font-size: 0.82rem; }
+
+/* Collapsible TOC toggle */
+.toc-toggle {
+  display: none;
+  font-family: var(--ui);
+  font-size: 0.85rem;
+  background: var(--accent-light);
+  border: 1px solid var(--border);
+  padding: 0.4rem 0.75rem;
+  cursor: pointer;
+  margin: 1rem 0 0.5rem;
+  width: 100%;
+  text-align: left;
+  color: var(--accent);
+}
+
+.content {
+  flex: 1;
+  min-width: 0;
+  padding: 2rem 0;
+  max-width: var(--max-prose);
+}
+
+/* ── Landing Page (Overview) ──────────────────────────────── */
+.landing-hero {
+  padding: 2.5rem 0 1.5rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 2rem;
+}
+.landing-hero h1 { border: none; margin-top: 0; font-size: 2rem; }
+.landing-hero .subtitle {
+  font-family: var(--ui);
+  font-size: 1rem;
+  color: var(--text-muted);
+  margin-top: 0.25rem;
+}
+.landing-hero .meta {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-top: 1rem;
+}
+
+.doc-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+.doc-card {
+  border: 1px solid var(--border);
+  padding: 1rem 1.1rem;
+  font-family: var(--ui);
+  font-size: 0.88rem;
+}
+.doc-card h3 {
+  font-size: 0.95rem;
+  margin-top: 0;
+  margin-bottom: 0.3rem;
+  color: var(--accent);
+}
+.doc-card p { margin-bottom: 0.5rem; color: var(--text-muted); font-size: 0.85rem; }
+.doc-card a.card-link {
+  font-size: 0.82rem;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+/* ── Variant Tabs (Application Variants page) ─────────────── */
+.tab-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  border-bottom: 2px solid var(--accent);
+  margin-bottom: 1.5rem;
+  font-family: var(--ui);
+  font-size: 0.88rem;
+}
+.tab-btn {
+  padding: 0.5rem 1rem;
+  background: none;
+  border: 1px solid var(--border);
+  border-bottom: none;
+  cursor: pointer;
+  color: var(--text-muted);
+  margin-right: 2px;
+  margin-bottom: -2px;
+}
+.tab-btn:hover { background: var(--accent-light); color: var(--accent); }
+.tab-btn.active {
+  background: var(--bg);
+  color: var(--accent);
+  font-weight: 700;
+  border-color: var(--accent);
+  border-bottom-color: var(--bg);
+}
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+.variant-axes {
+  font-family: var(--ui);
+  font-size: 0.88rem;
+  border: 1px solid var(--border);
+  padding: 0.75rem 1rem;
+  margin-bottom: 1.5rem;
+  background: #f9fafb;
+}
+.variant-axes dt { font-weight: 700; color: var(--accent); }
+.variant-axes dd { margin-left: 1rem; margin-bottom: 0.4rem; color: var(--text-muted); }
+
+/* ── Responsive ───────────────────────────────────────────── */
+@media (max-width: 720px) {
+  .layout { flex-direction: column; }
+  .sidebar {
+    width: 100%;
+    position: static;
+    max-height: none;
+    padding-top: 0;
+  }
+  .toc-toggle { display: block; }
+  .sidebar ul { display: none; }
+  .sidebar.open ul { display: block; }
+  .site-header { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+  .site-header nav a { margin-left: 0; margin-right: 1rem; }
+  .doc-grid { grid-template-columns: 1fr; }
+}
