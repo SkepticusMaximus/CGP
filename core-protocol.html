@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CGP Core Protocol v0.4</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<header class="site-header">
+  <a class="site-title" href="index.html">CGP Protocol</a>
+  <nav>
+    <a href="index.html">Overview</a>
+    <a href="core-protocol.html" class="active">Core Protocol</a>
+    <a href="application-variants.html">Variants</a>
+    <a href="governance.html">Governance</a>
+  </nav>
+</header>
+
+<div class="layout">
+
+  <aside class="sidebar" id="sidebar">
+    <button class="toc-toggle" id="toc-toggle">▼ Contents</button>
+    <h2>Contents</h2>
+    <ul>
+      <li><a href="#preface">Preface</a></li>
+      <li><a href="#s1">1. The Problem</a></li>
+      <li><a href="#s2">2. Design Principles</a></li>
+      <li><a href="#s3">3. Architecture Overview</a></li>
+      <li><a href="#s4">4. The Token Triarchy</a>
+        <ul>
+          <li><a href="#s4-1">4.1 Citizen Coin</a></li>
+          <li><a href="#s4-2">4.2 Agent Coin</a></li>
+          <li><a href="#s4-3">4.3 Poli Coin</a></li>
+          <li><a href="#s4-4">4.4 The Ohm's Law Relationship</a></li>
+          <li><a href="#s4-5">4.5 The Reserve Pool</a></li>
+        </ul>
+      </li>
+      <li><a href="#s5">5. PoD and PoR</a>
+        <ul>
+          <li><a href="#s5-1">5.1 Proof of Deliberation</a></li>
+          <li><a href="#s5-2">5.2 The Bid Event</a></li>
+          <li><a href="#s5-3">5.3 Proof of Ratification</a></li>
+          <li><a href="#s5-4">5.4 PoR Failure &amp; Expiry</a></li>
+          <li><a href="#s5-5">5.5 Commitment &amp; Politician's Stake</a></li>
+        </ul>
+      </li>
+      <li><a href="#s6">6. Emergent Dynamics</a>
+        <ul>
+          <li><a href="#s6-1">6.1 Reciprocal Supply</a></li>
+          <li><a href="#s6-2">6.2 Token Ratio as Signal</a></li>
+          <li><a href="#s6-3">6.3 Minting Formula</a></li>
+        </ul>
+      </li>
+      <li><a href="#s7">7. Where the Value Comes From</a></li>
+      <li><a href="#s8">8. Corruption Resistance</a></li>
+      <li><a href="#s9">9. The Discussion Layer</a></li>
+      <li><a href="#s10">10. The AI Agent Layer</a>
+        <ul>
+          <li><a href="#s10-1">10.1 AI as Usenet Participant</a></li>
+          <li><a href="#s10-2">10.2 AI as Agent Function</a></li>
+          <li><a href="#s10-3">10.3 AI as Oracle</a></li>
+        </ul>
+      </li>
+      <li><a href="#s11">11. Technical Stack</a></li>
+      <li><a href="#s12">12. Implementation Phases</a></li>
+      <li><a href="#s13">13. Open Questions</a></li>
+      <li><a href="#s14">14. Relationship to Other Work</a></li>
+      <li><a href="#s15">15. Closing</a></li>
+    </ul>
+  </aside>
+
+  <main class="content">
+
+    <h1>CGP Core Protocol</h1>
+    <p style="font-family:var(--ui);font-size:0.85rem;color:var(--text-muted);margin-top:-0.5rem;margin-bottom:1.5rem;">
+      Consensus Governance Protocol — Architecture Specification &nbsp;·&nbsp;
+      <strong>v0.4</strong> &nbsp;·&nbsp; April 2026 &nbsp;·&nbsp;
+      Status: Specification. Implementation not yet begun.
+    </p>
+    <p style="font-family:var(--ui);font-size:0.85rem;color:var(--text-muted);margin-bottom:2rem;">
+      Raw Markdown:
+      <a href="https://github.com/SkepticusMaximus/CGP-Protocol/blob/main/docs/CGP_Core_Protocol_v0_4.md"
+         target="_blank" rel="noopener"><code>docs/CGP_Core_Protocol_v0_4.md</code></a>
+    </p>
+
+    <hr />
+
+    <h2 id="preface">Preface</h2>
+    <p>
+      This document specifies the Consensus Governance Protocol (CGP) at the phylum level. It describes
+      mechanics, invariants, and relationships common to every CGP instantiation regardless of domain.
+      Domain-specific adaptations are catalogued in
+      <a href="application-variants.html">CGP Application Variants</a>.
+      The institutional body that stewards this specification is described in
+      <a href="governance.html">CGP Governance</a>.
+    </p>
+    <p>
+      This document is intended to be stable and citable. Revisions will be version-numbered and accompanied
+      by explicit change notes. Implementers should target a specific version and declare their compliance
+      in reference to it.
+    </p>
+
+    <hr />
+
+    <h2 id="s1">1. The Problem</h2>
+    <p>
+      Representative democracy as currently practised produces <strong>mandate poverty</strong> — a single
+      binary vote every three or four years about who rules rather than how they serve; granularity failure
+      with no mechanism for citizens to express policy preference with meaningful resolution; inverted
+      authority in which citizens cede agency to a ruling class and recover it only briefly at election time;
+      trivial capture by organised money, party machines, and media monopolies; and an alignment vacuum in
+      which no feedback loop connects politician behaviour to citizen preference between elections.
+    </p>
+    <p>
+      Standard voting reform addresses the aggregation method but leaves frequency, granularity, and
+      authority inversion untouched. CGP addresses all four.
+    </p>
+    <p>
+      The target is not to abolish representative institutions but to render them secondary to a
+      continuously-operating grassroots mandate layer. Elections become ratification rituals for policies
+      already decided by the constituents they affect. Politicians become managers of implementation rather
+      than originators of direction.
+    </p>
+
+    <hr />
+
+    <h2 id="s2">2. Design Principles</h2>
+    <ol>
+      <li><strong>Constituent primacy</strong> — citizens are the source of mandate, not consumers of it. Politicians serve; they do not lead.</li>
+      <li><strong>Continuous mandate</strong> — democratic authority is generated ongoingly at policy resolution, not periodically at personnel resolution.</li>
+      <li><strong>Cryptographic anchoring</strong> — mandate and its execution are recorded on a public blockchain; legitimacy is auditable by anyone.</li>
+      <li><strong>Triadic balance</strong> — three interdependent token classes model governance like Ohm's Law: a closed system of reciprocal variance with no dominant party and no bilateral collapse into bribery.</li>
+      <li><strong>Free speech absolutism</strong> — discussion is uncensored. Accountability is carried by reputation and stake, not moderation.</li>
+      <li><strong>Redundancy not abolition</strong> — the system makes elections redundant by generating superior mandate legitimacy, not by legally replacing them.</li>
+      <li><strong>Transparency as safety property</strong> — every contract, every vote, every ratification event must be human-readable without AI assistance.</li>
+      <li><strong>Emergent accountability</strong> — the token ratio between Poli Coin and Citizen Coin is itself a live signal of democratic health, readable by any observer without audit or interpretation.</li>
+      <li><strong>Directional routing, not surplus extraction</strong> — the citizen's value proposition is the ability to direct a portion of their existing tax liability toward outcomes they participated in mandating.</li>
+    </ol>
+
+    <hr />
+
+    <h2 id="s3">3. Architecture Overview</h2>
+<pre>
+┌─────────────────────────────────────────────────────┐
+│                   CLIENT LAYER                       │
+│  Newsreader apps · Web UI · Mobile · AI interface   │
+└───────────────┬─────────────────┬───────────────────┘
+                │                 │
+┌───────────────▼───────┐ ┌───────▼───────────────────┐
+│    DISCUSSION LAYER   │ │      AI AGENT LAYER       │
+│  NNTP / Usenet        │ │  Reads threads · Summarises│
+│  Threaded policy      │ │  Stress-tests proposals    │
+│  debate forums        │ │  Posts on @mention only    │
+│  Human-to-human       │ │  INN bot / NNTP client     │
+└───────────────┬───────┘ └───────┬───────────────────┘
+                │                 │
+┌───────────────▼─────────────────▼───────────────────┐
+│               SOVEREIGN PROTOCOL LAYER               │
+│  NNTP-ext + deliberate / bid / ratify event types    │
+│  Nostr-style relay mesh for node discovery           │
+│  Ethereum bridge for token transactions              │
+└─────────────────────────┬───────────────────────────┘
+                          │
+┌─────────────────────────▼───────────────────────────┐
+│                  TOKEN LAYER (TRIARCHY)              │
+│  Citizen Coin ──► Agent Coin ──► Poli Coin ──► (back)│
+│  Each pays exclusively for one other                 │
+│  No bilateral trades permitted by protocol           │
+└─────────────────────────┬───────────────────────────┘
+                          │
+┌─────────────────────────▼───────────────────────────┐
+│              ETHEREUM BLOCKCHAIN BASE                │
+│  Smart contracts · Escrow · PoD and PoR events       │
+│  Token ledger · Reserve pool                         │
+│  BTC/ETH reserve pool (tax fiat held as crypto)      │
+└─────────────────────────────────────────────────────┘
+</pre>
+
+    <hr />
+
+    <h2 id="s4">4. The Token Triarchy</h2>
+    <p>
+      Three token classes, each redeemable exclusively for one other. No direct bilateral exchange permitted.
+      The structure is modelled on Ohm's Law — a closed system of reciprocal variance that resists monopoly
+      and gridlock by mathematical construction.
+    </p>
+
+    <h3 id="s4-1">4.1 Citizen Coin</h3>
+    <ul>
+      <li><strong>Held by:</strong> enrolled citizens who have paid tax forward into an Agent node's reserve.</li>
+      <li><strong>Represents:</strong> directional claim on a portion of the holder's tax liability, generated by participation in deliberation.</li>
+      <li><strong>Function:</strong> participation proof and democratic stake.</li>
+      <li><strong>Minted:</strong> at Proof of Deliberation (PoD) events, as equal-share dividend among substantive deliberation participants in a mandate that has reached threshold.</li>
+      <li><strong>Consumed:</strong> at Proof of Ratification (PoR) events, when committed via bid to a successfully delivered mandate. Consumed Citizen Coin is destroyed; its value transfers to the Poli Coin minted for delivering politicians.</li>
+      <li><strong>Appreciating:</strong> held Citizen Coin accrues value through the system's emergent reciprocal supply dynamics against the Agent base.</li>
+      <li><strong>Non-transferable in any meaningful sense:</strong> its value is the participation. A proxy holder degrades the signal and cannot second-guess the citizen's detailed position in forum debate.</li>
+      <li><strong>PAYG integration:</strong> wage earners already forgo tax in advance via employer PAYG withholding. The employer holds tax aside and converts to Citizen Coin rather than remitting fiat directly. The employer may optionally take the Agent role.</li>
+    </ul>
+
+    <h3 id="s4-2">4.2 Agent Coin</h3>
+    <ul>
+      <li><strong>Held by:</strong> tax agents, accountants, or autonomous AI agents operating under regulatory conformance appropriate to their jurisdiction.</li>
+      <li><strong>Represents:</strong> escrow and liquidity services anchored to real fiat tax liability.</li>
+      <li><strong>Function:</strong> fractional-reserve bank for the system; middleman between crypto and fiat at tax time.</li>
+      <li><strong>Pays for:</strong> Poli Coin minting at PoR events.</li>
+      <li><strong>Smart contract role:</strong> Ethereum contracts define deliverable conditions. The agent holds the reserve; contracts trigger Poli Coin minting automatically on verified PoR.</li>
+      <li><strong>Reward:</strong> fixed or proportional commission on tax facilitation, paid from the tax flow at <em>redemption time</em>. Non-speculative. Comparable to existing tax-agent fees, and themselves tax-deductible where applicable.</li>
+      <li><strong>Liquidity:</strong> the agent provides real-world exchange function — converting crypto credit to fiat on the way to the tax office.</li>
+    </ul>
+
+    <h3 id="s4-3">4.3 Poli Coin</h3>
+    <ul>
+      <li><strong>Held by:</strong> delivering politicians, via email-derived paper wallets that exist whether the politician is aware of the system or not.</li>
+      <li><strong>Represents:</strong> reward for verified policy implementation.</li>
+      <li><strong>Function:</strong> performance-based political incentive, paid in an appreciating crypto-asset that the holder is free to hold or redeem for fiat at their discretion.</li>
+      <li><strong>Minted:</strong> at PoR events, in amount equivalent to the aggregate Citizen Coin bid against the ratified mandate. Distributed as equal share among politicians who formally committed to the mandate during its delivery phase.</li>
+      <li><strong>Non-speculative role in operations:</strong> the politician draws no fiat from the operational budget. Value is derived from appreciation of the token itself, funded by the surplus generated by the system's reciprocal supply dynamics.</li>
+      <li><strong>Opt-in via commitment, opt-out via non-participation:</strong> politicians who commit during the delivery phase share in the reward if the mandate ratifies; those who do not commit receive nothing.</li>
+      <li><strong>Bounded:</strong> aggregate Poli Coin value in fiat terms cannot exceed the surplus fraction above the underlying tax pool.</li>
+    </ul>
+
+    <h3 id="s4-4">4.4 The Ohm's Law Relationship</h3>
+<pre>
+Citizen Coin  (Voltage / E)     — the driving potential, the stake
+Agent Coin    (Current / I)     — the flow, the liquidity function
+Poli Coin     (Resistance / R)  — the load, where work is extracted
+Total fiat    (Wattage / P=E×I) — the economic denominator
+</pre>
+    <p>
+      The directional flow in the architecture diagram describes the token circulation path — who pays whom.
+      The Ohm's Law formula describes the interdependence relationship — how the three quantities mutually
+      constrain each other. These are two views of the same system.
+    </p>
+    <p>
+      Crucially, none of the three token values are fixed in absolute terms. The fiat tax pool in a given
+      jurisdiction is whatever it is for that period. Citizen, Agent, and Poli Coin can all float in absolute
+      supply and in unit value, as long as their relative proportions maintain the equation. There is no hard
+      unit cap on Citizen or Poli Coin. What is constrained is their combined value expressed in fiat terms,
+      which is always proportional to the Agent Coin base, which is always proportional to the actual tax pool.
+    </p>
+    <p>
+      Three-way systems resist monopoly and gridlock by construction. Two-party trades are polite bribes.
+      The compulsory third party ensures at least one other party's interests are always served.
+    </p>
+
+    <h3 id="s4-5">4.5 The Reserve Pool</h3>
+    <p>
+      Tax fiat underlying Agent Coin is held as BTC, ETH, or a crypto-basket stablecoin rather than
+      depreciating fiat. This provides both inflation resistance for the reserve and the appreciation
+      differential that funds the surplus pool from which Poli Coin derives value. Reserve appreciation
+      between PoD and PoR events is one of the four surplus sources catalogued in Section 7.
+    </p>
+    <p>
+      The reserve also requires a hedging mechanism at tax redemption time, because crypto volatility over
+      short windows can exceed the margin available for commission. Hedging design is an open question
+      (Section 13).
+    </p>
+
+    <hr />
+
+    <h2 id="s5">5. Proof of Deliberation (PoD) and Proof of Ratification (PoR)</h2>
+    <p>
+      Two distinct consensus events anchor the protocol. They fire at different moments in the mandate
+      lifecycle and serve different functions.
+    </p>
+
+    <h3 id="s5-1">5.1 Proof of Deliberation</h3>
+    <p>
+      PoD is the point at which a policy mandate is declared as having survived open debate meeting defined
+      thresholds. At PoD, <strong>Citizen Coin is minted fresh</strong> to participating citizens as
+      equal-share dividend, independent of the size of their subsequent bid commitment.
+    </p>
+    <p>
+      The mathematical insight: PoD is structurally equivalent to neural network training. The forward pass
+      is the accumulation of discussion and votes toward mandate declaration. The backward pass is the
+      propagation of legitimacy back to participants who contributed meaningfully. The loss function measures
+      divergence from collective deliberation. The weights being updated are participants' standing in the
+      network.
+    </p>
+    <p>Where Proof of Work rewards compute, and Proof of Stake rewards capital, <strong>Proof of Deliberation rewards meaningful participation</strong> in the discussion that produced a decision.</p>
+    <p><strong>Threshold criteria (to be formalised):</strong></p>
+    <ul>
+      <li>Minimum debate depth — thread length and reply diversity.</li>
+      <li>Multi-participant engagement above quorum.</li>
+      <li>AI-audited coherence and stress-test completion.</li>
+      <li>Formal mandate declaration passing the appropriate polling mechanism.</li>
+    </ul>
+
+    <h3 id="s5-2">5.2 The Bid Event</h3>
+    <p>
+      Between PoD and PoR, citizens may commit a percentage of their Citizen Coin holdings to a specific
+      mandate's reward pool. Commitment moves the pledged coin to smart-contract escrow; it is not destroyed.
+    </p>
+    <p>
+      Percentage rather than absolute commitment is structural: it is automatically self-limiting (no citizen
+      can commit more than 100%), and it is equitable — a holder of ten coins who commits 10% and a holder
+      of a thousand coins who commits 10% are expressing the same intensity of preference relative to their stake.
+    </p>
+    <p>
+      The aggregate of all committed bids on a mandate becomes its <strong>price signal</strong> — the
+      cumulative democratic weight behind the mandate, visible to politicians weighing which mandates to
+      commit to delivering. A mandate with a large aggregate bid is high-priority, high-reward.
+    </p>
+    <p>
+      Bid commitment does not degrade the bidder's PoD dividend, which was minted at the earlier PoD event.
+      The dividend is theirs regardless of subsequent bidding behaviour.
+    </p>
+
+    <h3 id="s5-3">5.3 Proof of Ratification</h3>
+    <p>
+      PoR is the point at which the real-world deliverable specified in the mandate is verified as having
+      been achieved. At PoR, the smart contract mints Poli Coin equivalent in fiat-value terms to the
+      aggregate bid on the mandate, and distributes it equally among politicians who formally committed
+      during the delivery phase. Escrowed Citizen Coin is consumed in the same event; its value transfers
+      to Poli Coin.
+    </p>
+    <p>
+      The Poli mint amount is deterministic: sum of bids in Citizen Coin units × current per-unit fiat
+      value of Citizen Coin. The same fiat value flows out as Poli Coin at the current per-unit Poli value.
+    </p>
+    <p>
+      Oracle verification of real-world deliverables is the hard problem in PoR design. Smart contract
+      conditions must be explicit, objective, and unambiguous. The oracle layer is a documented attack
+      surface (Section 8) and its design must be explicit, diverse, and subject to the same transparency
+      requirements as the contracts themselves.
+    </p>
+
+    <h3 id="s5-4">5.4 PoR Failure and Mandate Expiry</h3>
+    <p>
+      Mandates carry a delivery-phase expiry set by citizens at the PoD stage. If the mandate is not
+      ratified within the window, the smart contract dissolves: escrowed Citizen Coin is released back to
+      bidders without dividend; Poli Coin is not minted.
+    </p>
+    <p>
+      PoD dividend is retained by citizens regardless of PoR outcome. Citizens who bid on failed mandates
+      recover their staked Citizen Coin. They have lost only opportunity cost — the chance to commit that
+      percentage elsewhere during the lock period.
+    </p>
+
+    <h3 id="s5-5">5.5 Commitment and the Politician's Stake</h3>
+    <p>
+      Politicians claim a share of the PoR reward only by signing a commitment event during the delivery
+      phase, not after the fact. The commitment is public, on-chain, and non-retroactive.
+    </p>
+    <p>
+      This design avoids the oracle problem of measuring contribution post-hoc. Post-hoc contribution
+      measurement would require judges — whether human or AI — whose discretion would itself be a capture
+      surface. Commitment phase design sidesteps this entirely: the politician either committed before
+      delivery or did not. Objective, unambiguous, auditable.
+    </p>
+
+    <hr />
+
+    <h2 id="s6">6. Emergent Dynamics</h2>
+    <p>
+      CGP requires no engineered inflation or deflation schedule. The value dynamics emerge naturally from
+      the reciprocal supply relationship between Citizen Coin and Poli Coin against the Agent Coin anchor.
+    </p>
+
+    <h3 id="s6-1">6.1 Reciprocal Supply</h3>
+    <p>
+      More unratified mandates on the table means more Citizen Coin in circulation representing deliberative
+      stake. Until those mandates are ratified, the Poli Coin side is thin, so each unit of Poli Coin is
+      relatively scarce and therefore relatively valuable. When a wave of mandates ratifies, Poli Coin
+      supply increases, distributing value to politicians who delivered, while per-unit Citizen Coin value
+      dilutes as the mandates it represented are resolved.
+    </p>
+    <p>
+      The deflationary incentive to deliver early emerges naturally. The early politician captures a larger
+      per-unit slice because there are fewer politicians at the table. No halving schedule, no arbitrary
+      inflation curve. The system scales without parameter re-specification.
+    </p>
+
+    <h3 id="s6-2">6.2 The Token Ratio as Accountability Signal</h3>
+    <p>
+      The ratio between Poli Coin and Citizen Coin per-unit values is a live, continuously updated signal
+      of democratic health. A <strong>high Poli-to-Citizen ratio</strong> means mandates are being ratified
+      faster than citizens are generating new ones — the political class is performing. A
+      <strong>low ratio</strong> means citizens are generating mandates faster than politicians are
+      delivering — the political class is underperforming.
+    </p>
+    <p>
+      Any observer with access to the on-chain ledger can read this signal in real time. No auditor is
+      required, no interpretive layer, no trust in a reporting institution.
+    </p>
+
+    <h3 id="s6-3">6.3 The Minting Formula and Its Timing Consequence</h3>
+    <p>
+      Because per-unit Citizen and Poli values float with the market cap, two mandates with identical
+      fiat-value aggregate bids but ratified at different moments produce differently-valued Poli mints.
+      This is a consequence, not a bug — it is the price signal working as intended. Politicians who deliver
+      during a cold period capture scarcer, more valuable Poli per unit; politicians delivering during a hot
+      period capture Poli that is worth less per unit immediately but accrues value as the cycle cools.
+    </p>
+
+    <hr />
+
+    <h2 id="s7">7. Where the Value Comes From</h2>
+    <p>
+      The CGP reward system is funded by real surplus, not by arithmetic sleight of hand. Four surplus
+      sources, in descending order of Phase 1 reliability:
+    </p>
+    <ol>
+      <li><strong>Reserve appreciation.</strong> Fiat underwriting Citizen Coin is held as BTC, ETH, or a crypto basket. The appreciation differential between PoD and PoR is real value generated by the reserve itself.</li>
+      <li><strong>PAYG float.</strong> Employers already hold tax aside for weeks or months before remitting. That float currently earns interest for employer or government. Redirecting it to the CGP reserve captures existing value without asking anyone to pay more.</li>
+      <li><strong>Productivity gain from better policy.</strong> If CGP produces better outcomes, economic growth widens the tax base. Real, but long-term. Not Phase 1 evidence.</li>
+      <li><strong>Disintermediation savings.</strong> Election campaigns, lobbying infrastructure, party machinery. Large dollar figures but only capturable at Phase 3+.</li>
+    </ol>
+    <p>
+      The honest cost to the citizen is not new tax. It is reallocation of a portion of existing tax, plus
+      modest opportunity cost on the PAYG float, in exchange for directional control over what that portion
+      funds. This is the correct pitch: <em>"Direct your tax dollars to accountable outcomes, at the same
+      cost as the tax you were going to pay anyway."</em>
+    </p>
+
+    <hr />
+
+    <h2 id="s8">8. Corruption Resistance</h2>
+    <p>CGP is designed against four capture modes.</p>
+    <p>
+      <strong>Bilateral bribery.</strong> The triadic token structure forbids direct two-party exchange.
+      Every transaction involves a third party with structurally different interests. Two-party trades are
+      polite bribes; three-party systems resist this by construction.
+    </p>
+    <p>
+      <strong>Capital capture.</strong> Token minting is anchored to deliberation and delivery, not to
+      holdings. Accumulating Citizen Coin without participating produces no influence on new mandates.
+      Accumulating Poli Coin without delivering produces no new mandates.
+    </p>
+    <p>
+      <strong>Oracle capture.</strong> The smart contract layer depends on oracle feeds to verify real-world
+      PoR conditions. Oracle design must be explicit, diverse, and subject to the same transparency
+      requirements as the contracts themselves. Multi-source oracle design with independent verification
+      paths is the baseline.
+    </p>
+    <p>
+      <strong>Apathy capture.</strong> The most dangerous failure mode is not active attack but passive
+      disengagement. The PAYG integration and the equal-share dividend structure are designed to lower the
+      participation threshold to the point where engagement is the path of least resistance for a citizen
+      already paying tax.
+    </p>
+
+    <hr />
+
+    <h2 id="s9">9. The Discussion Layer</h2>
+    <p>
+      CGP's discussion substrate is NNTP (Usenet), not a centralised web forum. The design choice is
+      deliberate:
+    </p>
+    <ul>
+      <li><strong>Distributed architecture</strong> with no central point of capture.</li>
+      <li><strong>Hierarchical threading</strong> natively suited to policy debate.</li>
+      <li><strong>Established newsreader ecosystem</strong> — no new client required to participate in discussion.</li>
+      <li><strong>Proven protocol</strong> at Internet scale for decades.</li>
+      <li><strong>Inherent resistance</strong> to corporate capture or platform death.</li>
+    </ul>
+    <p>
+      Extensions required: voting and polling message types, token transaction events, PoD and PoR events,
+      blockchain anchoring of consensus snapshots, AI agent interface extensions.
+    </p>
+    <p>
+      A dedicated newsgroup — <code>alt.politics.cgp</code> — is envisaged as the canonical discussion hub
+      at launch. Think of Hansard or the Congressional Record, except distributed, participatory, and
+      many-to-many.
+    </p>
+
+    <hr />
+
+    <h2 id="s10">10. The AI Agent Layer</h2>
+    <p>
+      AI participates in CGP in three distinct roles, each with defined limits and transparency requirements.
+    </p>
+
+    <h3 id="s10-1">10.1 AI as Usenet Participant</h3>
+    <p>
+      AI connects via standard NNTP client (bot). Operates speak-when-spoken-to — responds to
+      <code>@mention</code>, does not inject into every thread. Clearly identified as AI via
+      username/signature convention.
+    </p>
+
+    <h3 id="s10-2">10.2 AI as Agent (Function, Not Actor)</h3>
+    <p>
+      The most sensitive role and the one where discipline matters most. The Agent role in the triarchy is
+      a function — escrow, liquidity, adjudication against conditions — not an autonomous decision-maker.
+    </p>
+    <p>
+      <strong>Version 1 (adopted):</strong> AI provides interpretability, translation, and navigation.
+      Smart contracts define rigid bounds. The AI explains what a contract does to a citizen in plain
+      language, flags anomalies, surfaces edge cases. It never decides anything. Adjudication happens in
+      rule-space where it can be audited, forked, challenged, rolled back. The AI is a magnifying glass,
+      not a judge.
+    </p>
+    <p>
+      <strong>Version 2 (rejected):</strong> AI with discretionary adjudication power, wrapped in DAO
+      governance. Rejected because a discretionary AI adjudicator is a concentration of power whose locus
+      is in weights and training data rather than in a person — harder to reason about than a human
+      bureaucracy, and reproducing the very problem CGP is designed to prevent.
+    </p>
+    <p>
+      <strong>Design principle:</strong> the AI layer must never be the only path to understanding the
+      system. Every contract a citizen interacts with must also be expressible in plain human-readable form
+      that a person can audit without AI assistance.
+    </p>
+
+    <h3 id="s10-3">10.3 AI as Oracle</h3>
+    <p>
+      Queries blockchain state and renders it in natural language. Produces reports on ratification status,
+      token flows, policy delivery progress. Citizens may converse with AI about the state of any on-chain
+      governance element. Provides accessible introspection without adding authority.
+    </p>
+
+    <hr />
+
+    <h2 id="s11">11. Technical Stack (Provisional)</h2>
+    <table>
+      <thead>
+        <tr><th>Layer</th><th>Technology</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Discussion</td><td><code>NNTP / INN (existing Usenet infrastructure)</code></td></tr>
+        <tr><td>Node discovery</td><td><code>Nostr relay mesh (as NNTP extension)</code></td></tr>
+        <tr><td>Smart contracts</td><td><code>Solidity on Ethereum</code></td></tr>
+        <tr><td>Token standard</td><td><code>ERC-20 variants with protocol-enforced transfer restrictions</code></td></tr>
+        <tr><td>Escrow</td><td><code>Ethereum smart contracts with time-lock and condition gates</code></td></tr>
+        <tr><td>Reserve pool</td><td><code>BTC/ETH or crypto-basket stablecoin</code></td></tr>
+        <tr><td>AI integration</td><td><code>NNTP bot client + LLM API (open-source preferred — Mistral, Llama family)</code></td></tr>
+        <tr><td>Client</td><td><code>Cross-platform app — newsreader + voting UI extension</code></td></tr>
+      </tbody>
+    </table>
+    <p>None of these choices is final. Each represents the current best fit, subject to revision as the ecosystem evolves.</p>
+
+    <hr />
+
+    <h2 id="s12">12. Implementation Phases</h2>
+    <p>
+      v0.4 restructures the phased rollout around three parallel application tracks rather than a single
+      linear State CGP progression.
+    </p>
+    <p>
+      <strong>Phase 0 — Specification (current).</strong> This document and successor drafts. Game-theoretic
+      formalisation of PoD thresholds. Token economic modelling. Variant-specific adaptations drafted in the
+      companion document.
+    </p>
+    <p>
+      <strong>Phase 1 — Parallel proofs of concept.</strong>
+    </p>
+    <ul>
+      <li><em>CCGP track:</em> corporate deployment with a willing private-sector partner. Smallest regulatory overhead, fastest path to revenue, real-world stress-testing.</li>
+      <li><em>NCGP track:</em> non-profit or cooperative deployment with machine-measurable mission metrics. Candidate venue for fully autonomous AI/DAO Agent field test.</li>
+      <li><em>SCGP track:</em> cold-start cohort of 10–100 participants running a non-binding municipal decision, with a human tax agent acting as Agent node.</li>
+    </ul>
+    <p>
+      <strong>Phase 2 — Pilots at scale.</strong> Main-net deployment with real stakes in each track.
+      Refinement of PoD thresholds from empirical data. Tax-agent integration for PAYG test case in a
+      single jurisdiction.
+    </p>
+    <p>
+      <strong>Phase 3 — Scale and displacement.</strong> Multi-jurisdictional SCGP deployment. Formal
+      engagement with electoral institutions as a parallel mandate source. Interoperability with civic tech
+      infrastructure.
+    </p>
+    <p>
+      <strong>Phase 4 (aspirational).</strong> Electoral-compensation model fully replaced by CGP
+      performance rewards. Tax office's distributive function absorbed by the CGP pipeline.
+    </p>
+
+    <hr />
+
+    <h2 id="s13">13. Open Questions</h2>
+    <p>The following require further design work or research.</p>
+    <ol>
+      <li><strong>Employer incentive for PAYG integration.</strong> What makes the PAYG employer voluntarily convert tax float to Citizen Coin rather than holding fiat and earning interest?</li>
+      <li><strong>PoD threshold formalisation.</strong> Exact criteria for sufficient deliberation. Needs game-theoretic modelling to resist gaming.</li>
+      <li><strong>Volatility at redemption.</strong> BTC/ETH reserve requires a hedging mechanism at tax redemption time.</li>
+      <li><strong>Cold start bootstrap.</strong> How does the first cohort onboard before network effects take hold?</li>
+      <li><strong>Constitutional layer.</strong> What determines whether unified consensus or bid/tender applies to a given class of decision?</li>
+      <li><strong>Cross-jurisdictional fiat bridge.</strong> For an international protocol, how does the tax layer interact with multiple national fiat currencies and tax authorities?</li>
+      <li><strong>Privacy versus auditability.</strong> What privacy-preserving primitives — zero-knowledge proofs, bid mixing — can be introduced without compromising the transparency property?</li>
+      <li><strong>Politician reputational stake form.</strong> <em>(new in v0.4)</em> Candidates include forfeited claims on concurrent mandates, temporary lockout from future commitments, persistent public signal to future deliberation.</li>
+      <li><strong>Mandate expiry window duration.</strong> <em>(new in v0.4)</em> Per-mandate citizen choice, jurisdiction default, or sliding scale by mandate complexity?</li>
+      <li><strong>Partial delivery handling.</strong> <em>(new in v0.4)</em> Binary PoR with partial-delivery arbitration, or graduated PoR with pre-specified milestone thresholds?</li>
+      <li><strong>Oracle federation design.</strong> <em>(new in v0.4)</em> Multi-source oracle architecture, cross-verification protocols, dispute resolution when oracles disagree.</li>
+      <li><strong>PoD dividend cadence.</strong> <em>(new in v0.4)</em> One mint event per mandate reaching PoD threshold, or periodic aggregation across a citizen's deliberation activity?</li>
+    </ol>
+
+    <hr />
+
+    <h2 id="s14">14. Relationship to Other Work</h2>
+    <table>
+      <thead>
+        <tr><th>Prior work</th><th>Relationship to CGP</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Liquid democracy</td><td>Shares continuous-mandate property; replaces delegation with direct participation rewarded by PoD.</td></tr>
+        <tr><td>DAO governance</td><td>Borrows smart-contract infrastructure; explicitly rejects governance-by-token-holdings as reproducing capital capture.</td></tr>
+        <tr><td>Participatory budgeting</td><td>Generalises from budget decisions to policy broadly; adds cryptographic permanence.</td></tr>
+        <tr><td>Futarchy (Hanson)</td><td>Shares mechanism-design orientation; anchors legitimacy in deliberation rather than prediction-market outcomes.</td></tr>
+        <tr><td>Quadratic voting</td><td>Achieves similar preference-intensity signalling but separates it from governance reward. Two axes that do not interfere.</td></tr>
+        <tr><td>Web3 governance tokens</td><td>Rejects the single-token governance model, which is effectively PoS under a different name.</td></tr>
+      </tbody>
+    </table>
+
+    <hr />
+
+    <h2 id="s15">15. Closing</h2>
+    <p>
+      It would be dishonest to end without acknowledging what this document is and is not.
+    </p>
+    <p>
+      It is not a finished system. It is a specification detailed enough to be criticised, not detailed
+      enough to be compiled. The gap from here to a working pilot is substantial — months of economic
+      modelling, smart-contract development, and community organising.
+    </p>
+    <p>
+      It is also not a guarantee against the concentration of power it aims to resist. Determined adversaries
+      with enough resources can probably capture any governance system, given time. CGP aims to raise the
+      cost of capture — particularly through its three-party structure, its anchoring of legitimacy in
+      deliberation rather than capital, and its requirement that every element be human-readable without AI
+      assistance — not to eliminate it.
+    </p>
+    <p>
+      What it is, is a serious attempt to sketch what grassroots democratic infrastructure might look like
+      if built from scratch in the era we are now entering.
+    </p>
+    <p>— Stevo, Adelaide, April 2026</p>
+
+    <hr />
+    <p style="font-family:var(--ui);font-size:0.82rem;color:var(--text-muted);">
+      This document synthesises design sessions conducted across multiple AI-assisted conversations,
+      including extended dialogues with Claude (Anthropic) and Manus AI. It represents the state of the
+      CGP Core Protocol as of April 2026.
+    </p>
+
+  </main>
+</div>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="attribution">
+      <strong>Author:</strong> Stevo (SkepticusMaximus), Adelaide, South Australia<br />
+      <strong>AI Collaborators:</strong> Claude (Anthropic) &amp; Manus AI<br />
+      Document Suite v0.4 · April 2026
+    </div>
+    <div class="badge">
+      <a href="https://github.com/SkepticusMaximus/CGP-Protocol/blob/main/LICENSE" target="_blank" rel="noopener">
+        <img src="https://img.shields.io/badge/License-GPL%20v3-blue.svg" alt="License: GPL v3" />
+      </a>
+    </div>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+</body>
+</html>
